@@ -1,2 +1,7 @@
 #virtual env
 venv
+activate.bat
+
+#pycharm idea
+.idea
+
