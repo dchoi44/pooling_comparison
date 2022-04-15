@@ -5,3 +5,7 @@ activate.bat
 #pycharm idea
 .idea
 
+#I/O
+datasets
+output
+
