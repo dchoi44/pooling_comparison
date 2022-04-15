@@ -29,7 +29,7 @@ dev_corpus, dev_queries, dev_qrels = GenericDataLoader(data_path).load(split="de
 #### Provide any sentence-transformers or HF model
 model_name = "bert-base-uncased"
 word_embedding_model = models.Transformer(model_name, max_seq_length=350)
-pooling_model = models.Pooling(word_embedding_model.get_word_embedding_dimension())
+pooling_model = models.Pooling(word_embedding_model.get_word_embedding_dimension(), pooling_mode_cls_token=True)
 model = SentenceTransformer(modules=[word_embedding_model, pooling_model])
 
 #### Or provide pretrained sentence-transformer model
