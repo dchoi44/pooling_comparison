@@ -53,7 +53,8 @@ ir_evaluator = retriever.load_ir_evaluator(dev_corpus, dev_queries, dev_qrels)
 # ir_evaluator = retriever.load_dummy_evaluator()
 
 #### Provide model save path
-model_save_path = os.path.join(pathlib.Path(__file__).parent.absolute(), "output", "{}-v1-{}".format(model_name, dataset))
+model_save_path = os.path.join(pathlib.Path(__file__).parent.absolute(), "output",
+                               "{}-v1-{}".format(model_name, dataset))
 os.makedirs(model_save_path, exist_ok=True)
 
 #### Configure Train params
@@ -62,9 +63,9 @@ evaluation_steps = 10000
 warmup_steps = int(len(train_samples) * num_epochs / retriever.batch_size * 0.1)
 
 retriever.fit(train_objectives=[(train_dataloader, train_loss)],
-                evaluator=ir_evaluator,
-                epochs=num_epochs,
-                output_path=model_save_path,
-                warmup_steps=warmup_steps,
-                evaluation_steps=evaluation_steps,
-                use_amp=True)
+              evaluator=ir_evaluator,
+              epochs=num_epochs,
+              output_path=model_save_path,
+              warmup_steps=warmup_steps,
+              evaluation_steps=evaluation_steps,
+              use_amp=True)
