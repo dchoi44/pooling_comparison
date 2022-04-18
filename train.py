@@ -24,7 +24,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('pooling', type=str, help='pooling method: one of [mean, max, cls]')
     args = parser.parse_args()
-    assert args.pooling in set('mean', 'max', 'cls'), "pooling not supported choose between mean, max, cls"
+    assert args.pooling in set(['mean', 'max', 'cls']), "pooling not supported choose between mean, max, cls"
 
     #### Just some code to print debug information to stdout
     logging.basicConfig(format='%(asctime)s - %(message)s',
