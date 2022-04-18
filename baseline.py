@@ -24,7 +24,7 @@ data_path = util.download_and_unzip(url, out_dir)
 #### Provide the data_path where nfcorpus has been downloaded and unzipped
 corpus, queries, qrels = GenericDataLoader(data_path).load(split="train")
 #### Please Note not all datasets contain a dev split, comment out the line if such the case
-dev_corpus, dev_queries, dev_qrels = GenericDataLoader(data_path).load(split="dev")
+# dev_corpus, dev_queries, dev_qrels = GenericDataLoader(data_path).load(split="dev")
 
 #### Provide any sentence-transformers or HF model
 model_name = "bert-base-uncased"
@@ -47,10 +47,10 @@ train_dataloader = retriever.prepare_train(train_samples, shuffle=True)
 train_loss = losses.MultipleNegativesRankingLoss(model=retriever.model, similarity_fct=util.dot_score)
 
 #### Prepare dev evaluator
-ir_evaluator = retriever.load_ir_evaluator(dev_corpus, dev_queries, dev_qrels)
+# ir_evaluator = retriever.load_ir_evaluator(dev_corpus, dev_queries, dev_qrels)
 
 #### If no dev set is present from above use dummy evaluator
-# ir_evaluator = retriever.load_dummy_evaluator()
+ir_evaluator = retriever.load_dummy_evaluator()
 
 #### Provide model save path
 model_save_path = os.path.join(pathlib.Path(__file__).parent.absolute(), "output",
