@@ -41,7 +41,7 @@ def main():
 
     scores = {}
     dataset_list = ["msmarco", "trec-covid", "nfcorpus", "nq", "hotpotqa", "fiqa", "arguana", "webis-touche2020",
-                    "cqadupstack", "quora", "dbpedia-entity", "scidocs", "fever", "climate-fever", "scifact"]
+                    "quora", "dbpedia-entity", "scidocs", "fever", "climate-fever", "scifact"]
     for dataset in dataset_list:
         #### Download nfcorpus.zip dataset and unzip the dataset
         url = "https://public.ukp.informatik.tu-darmstadt.de/thakur/BEIR/datasets/{}.zip".format(dataset)
