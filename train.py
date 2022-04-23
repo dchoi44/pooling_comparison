@@ -11,19 +11,11 @@ from sentence_transformers import losses, models, SentenceTransformer
 
 
 def main():
-    assert torch.cuda.is_available()
-    for i in range(torch.cuda.device_count()):
-        if torch.cuda.memory_usage(i) != 0:
-            continue
-        torch.cuda.set_device(i)
-        print(f'allocated gpu {i}')
-        break
-    else:
-        raise "gpu is full"
-
     parser = argparse.ArgumentParser()
     parser.add_argument('pooling', type=str, help='pooling method: one of [mean, max, cls]')
+    parser.add_argument('--gpu', typr=int, help='specify gpu number')
     args = parser.parse_args()
+    torch.cuda.set_device(args.gpu)
     assert args.pooling in {'mean', 'max', 'cls'}, \
         f"{args.pooling}-pooling not supported. choose between mean, max, cls"
 
