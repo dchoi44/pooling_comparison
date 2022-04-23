@@ -16,7 +16,7 @@ from beir.retrieval.search.dense import DenseRetrievalExactSearch as DRES
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('pooling', type=str, help='pooling method: one of [mean, max, cls]')
-    parser.add_argument('--gpu', typr=int, help='specify gpu number')
+    parser.add_argument('--gpu', type=int, help='specify gpu number')
     args = parser.parse_args()
     torch.cuda.set_device(args.gpu)
     assert args.pooling in {'mean', 'max', 'cls'}, \
