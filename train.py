@@ -8,16 +8,21 @@ from beir import util, LoggingHandler
 from beir.datasets.data_loader import GenericDataLoader
 from beir.retrieval.train import TrainRetriever
 from sentence_transformers import losses, models, SentenceTransformer
+from custom_pooling import CustomPooling
 
 
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('pooling', type=str, help='pooling method: one of [mean, max, cls]')
-    parser.add_argument('--gpu', typr=int, help='specify gpu number')
+    parser.add_argument('--gpu', type=int, help='specify gpu number')
+    parser.add_argument('--custom_pooling', type=bool, help='whether to use custom pooling or not')
     args = parser.parse_args()
     torch.cuda.set_device(args.gpu)
-    assert args.pooling in {'mean', 'max', 'cls'}, \
+    pooling_methods = {'mean', 'max', 'cls'}
+    assert args.pooling in pooling_methods, \
         f"{args.pooling}-pooling not supported. choose between mean, max, cls"
+    if args.custom_pooling:
+        assert args.pooling in pooling_methods - {'cls'}, f"cls pooling is not supported with custom pooling"
 
     #### Just some code to print debug information to stdout
     logging.basicConfig(format='%(asctime)s - %(message)s',
@@ -40,8 +45,15 @@ def main():
 
     #### Provide any sentence-transformers or HF model
     model_name = "bert-base-uncased"
-    word_embedding_model = models.Transformer(model_name, max_seq_length=350)
-    pooling_model = models.Pooling(word_embedding_model.get_word_embedding_dimension(), pooling_mode=args.pooling)
+    if not args.custom_pooling:
+        word_embedding_model = models.Transformer(model_name, max_seq_length=350)
+        pooling_model = models.Pooling(word_embedding_model.get_word_embedding_dimension(), pooling_mode=args.pooling)
+    else:
+        word_embedding_model = models.Transformer(model_name,
+                                                  max_seq_length=350,
+                                                  tokenizer_args={'trust_remote_code': True},
+                                                  tokenizer_name_or_path='./custom_tokenizer')
+        pooling_model = CustomPooling(word_embedding_model.get_word_embedding_dimension(), pooling_mode=args.pooling)
     model = SentenceTransformer(modules=[word_embedding_model, pooling_model])
 
     #### Or provide pretrained sentence-transformer model
@@ -65,8 +77,12 @@ def main():
     ir_evaluator = retriever.load_dummy_evaluator()
 
     #### Provide model save path
-    model_save_path = os.path.join(pathlib.Path(__file__).parent.absolute(), "output",
-                                   "{}-v1-{}-{}".format(model_name, dataset, args.pooling))
+    if not args.custom_pooling:
+        model_save_path = os.path.join(pathlib.Path(__file__).parent.absolute(), "output",
+                                       "{}-v1-{}-{}".format(model_name, dataset, args.pooling))
+    else:
+        model_save_path = os.path.join(pathlib.Path(__file__).parent.absolute(), "output",
+                                       "{}-v1-{}-custom_{}".format(model_name, dataset, args.pooling))
     os.makedirs(model_save_path, exist_ok=True)
 
     #### Configure Train params
