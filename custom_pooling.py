@@ -8,10 +8,10 @@ from torch import Tensor
 
 
 class CustomPooling(Pooling):
-    def __init__(self, word_embedding_dimension, pooling_mode='mean',
+    def __init__(self, word_embedding_dimension, pooling_mode=None,
                  pooling_mode_max_tokens: bool = False,
                  pooling_mode_mean_tokens: bool = True):
-        assert pooling_mode in {'mean', 'max'}
+        assert pooling_mode in {'mean', 'max'} or pooling_mode_mean_tokens or pooling_mode_max_tokens
         super().__init__(word_embedding_dimension, pooling_mode=pooling_mode)
 
         self.config_keys = ['word_embedding_dimension', 'pooling_mode_mean_tokens', 'pooling_mode_max_tokens']
