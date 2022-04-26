@@ -12,7 +12,9 @@ class CustomPooling(Pooling):
                  pooling_mode_max_tokens: bool = False,
                  pooling_mode_mean_tokens: bool = True):
         assert pooling_mode in {'mean', 'max'} or pooling_mode_mean_tokens or pooling_mode_max_tokens
-        super().__init__(word_embedding_dimension, pooling_mode=pooling_mode)
+        super().__init__(word_embedding_dimension, pooling_mode=pooling_mode,
+                         pooling_mode_max_tokens=pooling_mode_max_tokens,
+                         pooling_mode_mean_tokens=pooling_mode_mean_tokens)
 
         self.config_keys = ['word_embedding_dimension', 'pooling_mode_mean_tokens', 'pooling_mode_max_tokens']
         self.pooling_output_dimension = word_embedding_dimension
