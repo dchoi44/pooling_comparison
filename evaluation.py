@@ -17,6 +17,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('pooling', type=str, help='pooling method: one of [mean, max, cls]')
     parser.add_argument('--gpu', type=int, help='specify gpu number')
+    parser.add_argument('--custom_pooling', type=bool, help='whether to use custom pooling or not')
     args = parser.parse_args()
     torch.cuda.set_device(args.gpu)
     assert args.pooling in {'mean', 'max', 'cls'}, \
@@ -33,9 +34,13 @@ def main():
     #### Provide any pretrained sentence-transformers model
     #### The model was fine-tuned using cosine-similarity.
     #### Complete list - https://www.sbert.net/docs/pretrained_models.html
+    if not args.custom_pooling:
+        model_save_path = os.path.join(pathlib.Path(__file__).parent.absolute(), "output",
+                                       "bert-base-uncased-v1-msmarco-{}".format(args.pooling))
+    else:
+        model_save_path = os.path.join(pathlib.Path(__file__).parent.absolute(), "output",
+                                       "bert-base-uncased-v1-msmarco-custom-{}".format(args.pooling))
 
-    model_save_path = os.path.join(pathlib.Path(__file__).parent.absolute(), "output",
-                                   "{}-v1-{}-{}".format("bert-base-uncased", "msmarco", args.pooling))
     model = DRES(models.SentenceBERT(model_save_path), batch_size=16)
     retriever = EvaluateRetrieval(model, score_function="dot")
 

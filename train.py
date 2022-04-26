@@ -22,7 +22,7 @@ def main():
     assert args.pooling in pooling_methods, \
         f"{args.pooling}-pooling not supported. choose between mean, max, cls"
     if args.custom_pooling:
-        assert args.pooling in pooling_methods - {'cls'}, f"cls pooling is not supported with custom pooling"
+        assert args.pooling in pooling_methods - {'cls'}, f"{args.pooling} is not supported with custom pooling"
 
     #### Just some code to print debug information to stdout
     logging.basicConfig(format='%(asctime)s - %(message)s',
