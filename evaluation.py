@@ -12,6 +12,8 @@ from beir.retrieval import models
 from beir.retrieval.evaluation import EvaluateRetrieval
 from beir.retrieval.search.dense import DenseRetrievalExactSearch as DRES
 
+from custom_tokenizer.custom_bert import CustomBERT
+
 
 def main():
     parser = argparse.ArgumentParser()
@@ -37,11 +39,12 @@ def main():
     if not args.custom_pooling:
         model_save_path = os.path.join(pathlib.Path(__file__).parent.absolute(), "output",
                                        "bert-base-uncased-v1-msmarco-{}".format(args.pooling))
+        model = DRES(models.SentenceBERT(model_save_path), batch_size=16)
     else:
         model_save_path = os.path.join(pathlib.Path(__file__).parent.absolute(), "output",
-                                       "bert-base-uncased-v1-msmarco-custom-{}".format(args.pooling))
+                                       "bert-base-uncased-v1-msmarco-custom_{}".format(args.pooling))
+        model = DRES(CustomBERT(model_save_path), batch_size=16)
 
-    model = DRES(models.SentenceBERT(model_save_path), batch_size=16)
     retriever = EvaluateRetrieval(model, score_function="dot")
 
     scores = {}
