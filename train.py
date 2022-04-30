@@ -9,6 +9,7 @@ from beir.datasets.data_loader import GenericDataLoader
 from beir.retrieval.train import TrainRetriever
 from sentence_transformers import losses, models, SentenceTransformer
 from custom_pooling import CustomPooling
+from custom_tokenizer import CustomTokenizer
 
 
 def main():
@@ -50,6 +51,7 @@ def main():
         word_embedding_model = models.Transformer(model_name, max_seq_length=350)
         pooling_model = models.Pooling(word_embedding_model.get_word_embedding_dimension(), pooling_mode=args.pooling)
     else:
+        CustomTokenizer.from_pretrained('bert-base-uncased', sw_mode='nltk').save_pretrained('./custom_tokenizer')
         word_embedding_model = models.Transformer(model_name,
                                                   max_seq_length=350,
                                                   tokenizer_args={'trust_remote_code': True, 'sw_mode': args.sw_mode},
