@@ -20,6 +20,8 @@ def main():
     parser.add_argument('pooling', type=str, help='pooling method: one of [mean, max, cls]')
     parser.add_argument('--gpu', type=int, help='specify gpu number')
     parser.add_argument('--custom_pooling', type=bool, help='whether to use custom pooling or not')
+    parser.add_argument('--sw_mode', type=str, default='nltk', help='stopwords list: default=nltk')
+    parser.add_argument('--medical_dataset', action='store_true', help='if set, only eval on medical datasets')
     args = parser.parse_args()
     torch.cuda.set_device(args.gpu)
     assert args.pooling in {'mean', 'max', 'cls'}, \
@@ -42,7 +44,7 @@ def main():
         model = DRES(models.SentenceBERT(model_save_path), batch_size=16)
     else:
         model_save_path = os.path.join(pathlib.Path(__file__).parent.absolute(), "output",
-                                       "bert-base-uncased-v1-msmarco-custom_{}".format(args.pooling))
+                                       "bert-base-uncased-v1-msmarco-custom_{}_{}".format(args.sw_mode, args.pooling))
         model = DRES(CustomBERT(model_save_path), batch_size=16)
 
     retriever = EvaluateRetrieval(model, score_function="dot")
@@ -50,6 +52,9 @@ def main():
     scores = {}
     dataset_list = ["msmarco", "trec-covid", "nfcorpus", "nq", "hotpotqa", "fiqa", "arguana", "webis-touche2020",
                     "quora", "dbpedia-entity", "scidocs", "fever", "climate-fever", "scifact"]
+    if args.medical_dataset:
+        dataset_list = ['trec-covid', 'nfcorpus', 'scifact', 'scidocs']
+
     for dataset in dataset_list:
         #### Download nfcorpus.zip dataset and unzip the dataset
         url = "https://public.ukp.informatik.tu-darmstadt.de/thakur/BEIR/datasets/{}.zip".format(dataset)

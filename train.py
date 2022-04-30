@@ -83,7 +83,7 @@ def main():
                                        "{}-v1-{}-{}".format(model_name, dataset, args.pooling))
     else:
         model_save_path = os.path.join(pathlib.Path(__file__).parent.absolute(), "output",
-                                       "{}-v1-{}-custom_{}".format(model_name, dataset, args.pooling))
+                                       "{}-v1-{}-custom_{}_{}".format(model_name, dataset, args.sw_mode, args.pooling))
     os.makedirs(model_save_path, exist_ok=True)
 
     #### Configure Train params
