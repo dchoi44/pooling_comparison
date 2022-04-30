@@ -10,3 +10,4 @@ datasets
 output
 
 /execution_times
+/sw_stats.py

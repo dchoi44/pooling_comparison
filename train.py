@@ -16,6 +16,7 @@ def main():
     parser.add_argument('pooling', type=str, help='pooling method: one of [mean, max, cls]')
     parser.add_argument('--gpu', type=int, help='specify gpu number')
     parser.add_argument('--custom_pooling', type=bool, help='whether to use custom pooling or not')
+    parser.add_argument('--sw_mode', type=str, default='nltk', help='stopwords list: default=nltk')
     args = parser.parse_args()
     torch.cuda.set_device(args.gpu)
     pooling_methods = {'mean', 'max', 'cls'}
@@ -51,7 +52,7 @@ def main():
     else:
         word_embedding_model = models.Transformer(model_name,
                                                   max_seq_length=350,
-                                                  tokenizer_args={'trust_remote_code': True},
+                                                  tokenizer_args={'trust_remote_code': True, 'sw_mode': args.sw_mode},
                                                   tokenizer_name_or_path='./custom_tokenizer')
         pooling_model = CustomPooling(word_embedding_model.get_word_embedding_dimension(), pooling_mode=args.pooling)
     model = SentenceTransformer(modules=[word_embedding_model, pooling_model])
