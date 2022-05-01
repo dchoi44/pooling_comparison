@@ -56,6 +56,7 @@ def main():
                                                   max_seq_length=350,
                                                   tokenizer_args={'trust_remote_code': True, 'sw_mode': args.sw_mode},
                                                   tokenizer_name_or_path='./custom_tokenizer')
+        word_embedding_model.config_keys.append('trust_remote_code')
         pooling_model = CustomPooling(word_embedding_model.get_word_embedding_dimension(), pooling_mode=args.pooling)
     model = SentenceTransformer(modules=[word_embedding_model, pooling_model])
 

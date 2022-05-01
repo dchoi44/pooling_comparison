@@ -12,7 +12,7 @@ from beir.retrieval import models
 from beir.retrieval.evaluation import EvaluateRetrieval
 from beir.retrieval.search.dense import DenseRetrievalExactSearch as DRES
 
-from custom_tokenizer.custom_bert import CustomBERT
+from custom_bert import CustomBERT
 
 
 def main():
